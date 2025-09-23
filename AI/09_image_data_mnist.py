@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 # 1. MNIST 데이터셋 불러오기
 # TensorFlow/Keras에 내장된 MNIST 데이터셋 로드
-# x_train, y_train: 학습용 이미지와 레이블
+# x_train, y_train: 학습용 이미지와 레이블.
 # x_test, y_test: 테스트용 이미지와 레이블
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
 

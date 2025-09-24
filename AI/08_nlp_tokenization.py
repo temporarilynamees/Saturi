@@ -25,7 +25,7 @@ sequences = tokenizer.texts_to_sequences(sentences)
 print("\n변환된 시퀀스:", sequences)
 
 # 4. 패딩 (Padding)
-# 문장의 길이를 통일하기 위해 가장 긴 문장을 기준으로 나머지 문장의 뒤에 0을 채움
+# 문장의 길이를 통일하기 위해 가장 긴 문장을 기준으로 나머지 문장의 뒤에 0을 채움..
 padded = pad_sequences(sequences, padding='post')
 print("\n패딩된 시퀀스:")
 print(padded)

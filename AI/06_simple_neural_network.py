@@ -32,6 +32,6 @@ model.fit(X, y, epochs=1000, verbose=2)
 # 5. 예측 및 평가
 predictions = model.predict(X)
 print("\n--- 예측 결과 ---")
-# 예측값이 0.5보다 크면 1, 작으면 0으로 변환
+# 예측값이 0.5보다 크면 1, 작으면 0으로 변환..
 rounded_predictions = [round(x[0]) for x in predictions]
 print(rounded_predictions)

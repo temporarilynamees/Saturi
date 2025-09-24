@@ -11,3 +11,8 @@ Notion 구조
 Notion Link : https://www.notion.so/team/2788539f-f6d3-8199-b14e-00422b2e56af/join
 
 -------------------------------
+
+페이지 작성 규칙
+- 태그 필참
+-
+-

@@ -16,3 +16,10 @@ Notion Link : https://www.notion.so/team/2788539f-f6d3-8199-b14e-00422b2e56af/jo
 - 태그 필참
 -
 -
+
+-------------------------------
+
+<img width="516" height="143" alt="image" src="https://github.com/user-attachments/assets/dab6983a-7f0c-4b94-8f1f-a263c18d1a83" />
+
+Slack과의 연동 완료하였음
+

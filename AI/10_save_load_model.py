@@ -29,7 +29,7 @@ loaded_model = joblib.load(model_filename)
 print(f"'{model_filename}' 파일에서 모델을 불러왔습니다.")
 
 # 2-2. 불러온 모델로 예측 수행
-# 새로운 데이터..
+# 새로운 데이터....
 X_new = np.array([[6], [7]])
 predictions = loaded_model.predict(X_new)
 

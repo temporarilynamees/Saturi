@@ -27,7 +27,7 @@ print(f"모델 정확도: {acc*100:.2f}%")
 print("\n오차 행렬 (Confusion Matrix):")
 print(cm)
 
-# Seaborn을 이용한 히트맵 시각화..
+# Seaborn을 이용한 히트맵 시각화....
 plt.figure(figsize=(8, 6))
 sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=cancer.target_names, yticklabels=cancer.target_names)
 plt.xlabel('Predicted Label')

@@ -22,7 +22,7 @@ labels = kmeans.labels_
 # 군집의 중심점 좌표
 centers = kmeans.cluster_centers_
 
-# 4. 시각화....
+# 4. 시각화......
 plt.scatter(X[:, 0], X[:, 1], c=labels, s=50, cmap='viridis')
 plt.scatter(centers[:, 0], centers[:, 1], c='red', s=200, alpha=0.75, marker='X')
 plt.title("K-Means Clustering")

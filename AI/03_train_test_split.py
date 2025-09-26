@@ -17,7 +17,7 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42
 )
 
-# 3. 분할된 데이터 크기 확인....
+# 3. 분할된 데이터 크기 확인......
 print(f"원본 데이터 크기: {X.shape}")
 print(f"학습용 데이터 크기: {X_train.shape}")
 print(f"테스트용 데이터 크기: {X_test.shape}")

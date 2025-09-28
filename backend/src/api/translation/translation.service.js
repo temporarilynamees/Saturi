@@ -8,7 +8,7 @@ async function translateSentence(sentence) {
 const dialectDictionary = {
     jeju: {
         patterns: [
-            {dialect : "했어", }
+            {dialect : "했수깡", standard : "했어"}
         ]
     },
 }

@@ -9,3 +9,7 @@ const DialectTranslator = () => {
   const [detectedDialect, setDetectedDialect] = useState('');
   const [confidence, setConfidence] = useState(0);
 }
+
+const dialectDictionary = {
+  
+}

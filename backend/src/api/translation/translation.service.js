@@ -5,4 +5,8 @@ async function translateSentence(sentence) {
      */
 }
 
-const dialectDictionary = {}
+const dialectDictionary = {
+    jeju: {
+        
+    }
+}

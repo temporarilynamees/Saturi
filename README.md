@@ -1,4 +1,4 @@
-# Saturi
+.# Saturi
 saturi
 제주도 사투리를 표준어 문장으로 바꿔주는 서비스
 프로젝트 구조
@@ -13,7 +13,7 @@ saturi
 github 커밋 테스트
 줄바꿈이 안돼
 node js.txt 빌드
-11111111111111111111111111111
+11111111111111111111111111111.
 comit test
 build tools-------------------
 node js, react...

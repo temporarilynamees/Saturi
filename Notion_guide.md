@@ -42,5 +42,7 @@ Slack과의 연동 완료하였음
 - 마감일 타임라인
   <img width="1501" height="534" alt="image" src="https://github.com/user-attachments/assets/4fd47d47-f964-4f3b-bf95-bc5d55f11169" />
 
+!!!! 추가, 수정, 삭제 등이 가능하니 문의 할시 바로바로 적용하겠음
+
 
  

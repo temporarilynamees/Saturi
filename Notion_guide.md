@@ -26,3 +26,11 @@ Notion Link : https://www.notion.so/team/2788539f-f6d3-8199-b14e-00422b2e56af/jo
 
 Slack과의 연동 완료하였음
 
+-------------------------------
+
+구성요소
+
+- 테이블 뷰
+   <img width="1528" height="501" alt="image" src="https://github.com/user-attachments/assets/7be374e6-25ad-4feb-8484-e64db1051e54" />
+
+ 

@@ -16,4 +16,4 @@ node js.txt 빌드
 11111111111111111111111111111
 comit test
 build tools-------------------
-node js, react..
+node js, react...

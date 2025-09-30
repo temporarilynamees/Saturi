@@ -29,6 +29,6 @@ plt.legend()
 plt.grid(True)
 plt.show()
 
-# 학습된 모델의 기울기와 절편 출력........
+# 학습된 모델의 기울기와 절편 출력........//
 print(f"기울기 (Coefficient): {model.coef_[0]:.2f}")
 print(f"y절편 (Intercept): {model.intercept_:.2f}")

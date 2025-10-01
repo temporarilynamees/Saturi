@@ -112,7 +112,7 @@ npm start
 ```
 GET /api/translation?sentence=사투리문장
 ```
-
+....
 **응답 예시:**
 ```json
 {

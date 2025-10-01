@@ -15,7 +15,7 @@ async function translateSentence(req, res, next) {
         }
         const translateSentence = await service.translateSentence(dialectSentence);
         return res.status(200)
-        .json({sentence: translateSentence});
+        .json({translation: translateSentence});
     }
     catch (error) {
         next(error);

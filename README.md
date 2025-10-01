@@ -51,6 +51,7 @@ npm run dev
 ```bash
 cd frontend
 npm run build
+npm run preview
 ```
 
 빌드된 파일은 `frontend/dist/` 폴더에 생성됩니다.

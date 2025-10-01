@@ -83,6 +83,7 @@ npm run dev
 cd frontend
 npm install
 npm run build
+npm run preview
 ```
 
 **2. 백엔드 실행:**

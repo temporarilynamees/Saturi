@@ -1,5 +1,6 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
+import useSpeechRecognition from '../hooks/useSpeechRecognition';
 import './DialectTranslator.css';
 
 // debounce 유틸 함수
@@ -17,6 +18,31 @@ const DialectTranslator = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [isComposing, setIsComposing] = useState(false);
+
+  // 음성 인식 Hook
+  const {
+    isListening,
+    transcript,
+    isSupported,
+    error: speechError,
+    startListening,
+    stopListening,
+    resetTranscript,
+  } = useSpeechRecognition();
+
+  // 음성 인식 결과를 입력창에 반영
+  useEffect(() => {
+    if (transcript) {
+      setInputText(transcript);
+    }
+  }, [transcript]);
+
+  // 음성 인식 에러 처리
+  useEffect(() => {
+    if (speechError) {
+      setError(speechError);
+    }
+  }, [speechError]);
 
   // 실제 번역 로직
   const executeTranslate = async (inputText) => {
@@ -58,6 +84,16 @@ const DialectTranslator = () => {
     setInputText('');
     setTranslatedText('');
     setError('');
+    resetTranscript();
+  };
+
+  // 음성 입력 버튼 핸들러
+  const handleVoiceInput = () => {
+    if (isListening) {
+      stopListening();
+    } else {
+      startListening();
+    }
   };
 
   const handleCompositionStart = () => {
@@ -90,6 +126,16 @@ const DialectTranslator = () => {
         <div className="input-section">
           <div className="section-header">
             <h2>사투리 입력</h2>
+            {isSupported && (
+              <button
+                className={`voice-button ${isListening ? 'listening' : ''}`}
+                onClick={handleVoiceInput}
+                disabled={isLoading}
+                title={isListening ? '음성 인식 중지' : '음성 입력'}
+              >
+                {isListening ? '🎤 인식 중...' : '🎤 음성 입력'}
+              </button>
+            )}
           </div>
           <textarea
             className="input-textarea"

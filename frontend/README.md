@@ -63,14 +63,19 @@ GET /api/translation?sentence=사투리문장
 ```
 
 ## 사용 기술
-
 - React 18
 - Vite (빌드 도구)
 - Axios (HTTP 클라이언트)
 - CSS3 (스타일링)
 
-## 개발 참고사항
+## Vite
+- 코드 수정 시 브라우저에 즉시 반영
+- 전체 페이지 새로고침 없이 변경 사항만 교체
+- 상태 유지
+- 자동으로 gzip 압축 
 
-- 백엔드 서버가 `http://localhost:5000`에서 실행 중이어야 합니다
-- Vite의 프록시 설정으로 CORS 문제를 해결합니다
-- Enter 키로 번역 실행 가능 (Shift+Enter는 줄바꿈)
+### 이 프로젝트에서의 활용
+- 개발 서버: `npm run dev` → 즉시 시작
+- 프록시 설정: CORS 문제 해결 (`/api` → `http://localhost:3000`)
+- 빌드: `npm run build` → 최적화된 정적 파일 생성
+- 미리보기: `npm run preview` → 프로덕션 빌드 테스트

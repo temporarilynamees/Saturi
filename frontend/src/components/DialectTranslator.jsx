@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import axios from 'axios';
 import './DialectTranslator.css';
 
@@ -31,7 +31,9 @@ const DialectTranslator = () => {
       setIsLoading(false);
     }
   };
-
+  const debounce = () => {
+    
+  }
   const handleClear = () => {
     setInputText('');
     setTranslatedText('');

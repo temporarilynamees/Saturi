@@ -1,6 +1,15 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import axios from 'axios';
 import './DialectTranslator.css';
+
+// debounce 유틸 함수
+const debounce = (func, delay) => {
+  let timeoutId;
+  return (...args) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => func(...args), delay);
+  };
+};
 
 const DialectTranslator = () => {
   const [inputText, setInputText] = useState('');
@@ -8,11 +17,9 @@ const DialectTranslator = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [isComposing, setIsComposing] = useState(false);
-  const [isListening, setIsListening] = useState(false);
-  const [speechSupported, setSpeechSupported] = useState(true);
-  const recognitionRef = useRef(null);
 
-  const handleTranslate = async () => {
+  // 실제 번역 로직
+  const executeTranslate = async (inputText) => {
     if (!inputText.trim()) {
       setError('번역할 문장을 입력해주세요.');
       return;
@@ -34,9 +41,19 @@ const DialectTranslator = () => {
       setIsLoading(false);
     }
   };
-  const debounce = () => {
-    
+
+  const debouncedTranslateRef = useRef(null);
+
+  if (!debouncedTranslateRef.current) {
+    debouncedTranslateRef.current = debounce((inputText) => {
+      executeTranslate(inputText);
+    }, 300);
   }
+
+  const handleTranslate = () => {
+    debouncedTranslateRef.current(inputText);
+  };
+
   const handleClear = () => {
     setInputText('');
     setTranslatedText('');
@@ -62,68 +79,6 @@ const DialectTranslator = () => {
     }
   };
 
-  // Initialize Web Speech API
-  useEffect(() => {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-    if (!SpeechRecognition) {
-      setSpeechSupported(false);
-      return;
-    }
-
-    const recognition = new SpeechRecognition();
-    recognition.lang = 'ko-KR';
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-
-    recognition.onstart = () => {
-      setIsListening(true);
-      setError('');
-    };
-
-    recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
-      setInputText(transcript);
-    };
-
-    recognition.onerror = (event) => {
-      setIsListening(false);
-      if (event.error === 'no-speech') {
-        setError('음성이 감지되지 않았습니다. 다시 시도해주세요.');
-      } else if (event.error === 'not-allowed') {
-        setError('마이크 권한이 필요합니다.');
-      } else {
-        setError('음성 인식 중 오류가 발생했습니다.');
-      }
-    };
-
-    recognition.onend = () => {
-      setIsListening(false);
-    };
-
-    recognitionRef.current = recognition;
-
-    return () => {
-      if (recognitionRef.current) {
-        recognitionRef.current.stop();
-      }
-    };
-  }, []);
-
-  const handleVoiceInput = () => {
-    if (!speechSupported) {
-      setError('이 브라우저는 음성 인식을 지원하지 않습니다.');
-      return;
-    }
-
-    if (isListening) {
-      recognitionRef.current?.stop();
-    } else {
-      recognitionRef.current?.start();
-    }
-  };
-
   return (
     <div className="translator-container">
       <div className="translator-header">
@@ -136,26 +91,16 @@ const DialectTranslator = () => {
           <div className="section-header">
             <h2>사투리 입력</h2>
           </div>
-          <div className="input-wrapper">
-            <textarea
-              className="input-textarea"
-              placeholder="번역할 사투리를 입력하세요..."
-              value={inputText}
-              onChange={handleChange}
-              onCompositionStart={handleCompositionStart}
-              onCompositionEnd={handleCompositionEnd}
-              onKeyDown={handleKeyDown}
-              disabled={isLoading}
-            />
-            <button
-              className={`voice-button ${isListening ? 'listening' : ''}`}
-              onClick={handleVoiceInput}
-              disabled={isLoading || !speechSupported}
-              title={speechSupported ? '음성으로 입력하기' : '음성 인식 지원 안 됨'}
-            >
-              {isListening ? '⏹️' : '🎤'}
-            </button>
-          </div>
+          <textarea
+            className="input-textarea"
+            placeholder="번역할 사투리를 입력하세요..."
+            value={inputText}
+            onChange={handleChange}
+            onCompositionStart={handleCompositionStart}
+            onCompositionEnd={handleCompositionEnd}
+            onKeyDown={handleKeyDown}
+            disabled={isLoading}
+          />
           <div className="char-count">
             {inputText.length} / 500
           </div>

@@ -99,13 +99,6 @@ cd backend
 npm install
 npm start
 ```
-
-**3. 프론트엔드 정적 파일 서빙 (옵션):**
-
-방법 A - 별도 서버 (Nginx, Apache 등)로 `frontend/dist/` 서빙
-
-방법 B - Express에서 직접 서빙 (백엔드 수정 필요)
-
 ## API 엔드포인트
 
 ### 번역 API

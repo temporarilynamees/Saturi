@@ -24,6 +24,6 @@ for i in range(10):
     plt.subplot(2, 5, i + 1)
     plt.imshow(x_train[i], cmap='gray')
     plt.title(f"Label: {y_train[i]}")
-    plt.axis('off') # 축 정보 숨기기........//
+    plt.axis('off') # 축 정보 숨기기........////
 plt.tight_layout()
 plt.show()

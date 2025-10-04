@@ -1,24 +1,23 @@
+// backend/src/app.js
 const express = require('express');
-const app = express();
-const path = require('path');
+const morgan = require('morgan');
 const cors = require('cors');
+const path = require('path');
+const ttsRoutes = require('./routes/tts.routes');
+
+const app = express();
 
 app.use(cors());
-app.use(express.json());
-app.use('/', express.static());
-app.use('/api/translate',);
-app.use('/api/tts',);
-app.use('/api/',);
+app.use(morgan('dev'));
+app.use(express.json({ limit: '2mb' }));
 
-/**
- * 정적인 html 파일 반환하는 라우트 핸들러들
- */
-app.get('/', (req, res) => {
-    res.sendFile(path.join());
-});
+// 정적 제공(필요 시 실제 폴더 경로 지정)
+app.use('/', express.static(path.join(__dirname, '../public')));
 
-app.get('/videos/:videouid', (req, res) => {
-    res.sendFile(path.join());
-});
+// 헬스체크
+app.get('/health', (_req, res) => res.json({ ok: true }));
+
+// TTS API
+app.use('/api/tts', ttsRoutes);
 
 module.exports = app;

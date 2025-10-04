@@ -17,3 +17,7 @@ async function speechToText(language_code, audio) {
     );
     return response.data;
 }
+
+module.exports = {
+    speechToText
+}

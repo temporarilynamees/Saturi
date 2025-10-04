@@ -18,4 +18,5 @@ cv.imshow('Sobel Y', sobel_y)
 cv.imshow('Edge Strength', edge_strength)
 
 cv.waitKey()
-cv.destroyAllWindows()
+
+cv.destroyAllWindows()#..

@@ -26,4 +26,5 @@ cv.resizeWindow(WINDOW_NAME, 1720, 720)
 cv.imshow(WINDOW_NAME, final_image)
 
 cv.waitKey()
-cv.destroyAllWindows()
+
+cv.destroyAllWindows()#..

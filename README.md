@@ -1,3 +1,0 @@
-# Saturi
-saturi
-KG10

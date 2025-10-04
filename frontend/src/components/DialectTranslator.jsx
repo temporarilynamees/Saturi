@@ -1,6 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import axios from 'axios';
-import useSpeechRecognition from '../hooks/useSpeechRecognition';
 import './DialectTranslator.css';
 
 // debounce 유틸 함수
@@ -19,30 +18,70 @@ const DialectTranslator = () => {
   const [error, setError] = useState('');
   const [isComposing, setIsComposing] = useState(false);
 
-  // 음성 인식 Hook
-  const {
-    isListening,
-    transcript,
-    isSupported,
-    error: speechError,
-    startListening,
-    stopListening,
-    resetTranscript,
-  } = useSpeechRecognition();
+  // 음성 녹음 관련 상태
+  const [isRecording, setIsRecording] = useState(false);
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
 
-  // 음성 인식 결과를 입력창에 반영
-  useEffect(() => {
-    if (transcript) {
-      setInputText(transcript);
-    }
-  }, [transcript]);
+  // 음성 녹음 시작
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      audioChunksRef.current = [];
 
-  // 음성 인식 에러 처리
-  useEffect(() => {
-    if (speechError) {
-      setError(speechError);
+      mediaRecorder.ondataavailable = (event) => {
+        audioChunksRef.current.push(event.data);
+      };
+
+      mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
+        await sendAudioToBackend(audioBlob);
+        stream.getTracks().forEach(track => track.stop());
+      };
+
+      mediaRecorder.start();
+      setIsRecording(true);
+    } catch (err) {
+      setError('마이크 접근 권한이 필요합니다.');
+      console.error('Recording error:', err);
     }
-  }, [speechError]);
+  };
+
+  // 음성 녹음 중지
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+    }
+  };
+
+  // 백엔드로 오디오 전송
+  const sendAudioToBackend = async (audioBlob) => {
+    setIsLoading(true);
+    setError('');
+
+    try {
+      const formData = new FormData();
+      formData.append('audio', audioBlob, 'recording.wav');
+      formData.append('language_code', 'korean');
+
+      const response = await axios.post('/api/stt', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      // STT 결과를 입력창에 표시
+      setInputText(response.data.text || response.data.return_object?.recognized || '');
+    } catch (err) {
+      setError('음성 인식 중 오류가 발생했습니다.');
+      console.error('STT error:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // 실제 번역 로직
   const executeTranslate = async (inputText) => {
@@ -84,15 +123,14 @@ const DialectTranslator = () => {
     setInputText('');
     setTranslatedText('');
     setError('');
-    resetTranscript();
   };
 
   // 음성 입력 버튼 핸들러
   const handleVoiceInput = () => {
-    if (isListening) {
-      stopListening();
+    if (isRecording) {
+      stopRecording();
     } else {
-      startListening();
+      startRecording();
     }
   };
 
@@ -126,16 +164,14 @@ const DialectTranslator = () => {
         <div className="input-section">
           <div className="section-header">
             <h2>사투리 입력</h2>
-            {isSupported && (
-              <button
-                className={`voice-button ${isListening ? 'listening' : ''}`}
-                onClick={handleVoiceInput}
-                disabled={isLoading}
-                title={isListening ? '음성 인식 중지' : '음성 입력'}
-              >
-                {isListening ? '🎤 인식 중...' : '🎤 음성 입력'}
-              </button>
-            )}
+            <button
+              className={`voice-button ${isRecording ? 'listening' : ''}`}
+              onClick={handleVoiceInput}
+              disabled={isLoading}
+              title={isRecording ? '녹음 중지' : '음성 입력'}
+            >
+              {isRecording ? '🎤 녹음 중...' : '🎤 음성 입력'}
+            </button>
           </div>
           <textarea
             className="input-textarea"

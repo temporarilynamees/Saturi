@@ -19,4 +19,5 @@ cv.imshow('Super pixels (compact 40)', cv.cvtColor(sp_img2, cv.COLOR_RGB2BGR))
 
 cv.waitKey()
 
-cv.destroyAllWindows()#..
+cv.destroyAllWindows()#....
+

@@ -21,4 +21,5 @@ cv.imshow('Normalized cut', cv.cvtColor(ncut_coffee, cv.COLOR_RGB2BGR))
 
 cv.waitKey()
 
-cv.destroyAllWindows()#..
+cv.destroyAllWindows()#....
+

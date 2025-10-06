@@ -19,5 +19,6 @@ cv.imshow('Edge Strength', edge_strength)
 
 cv.waitKey()
 
-cv.destroyAllWindows()#....
+cv.destroyAllWindows()#......
+
 

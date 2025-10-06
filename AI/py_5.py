@@ -13,5 +13,6 @@ cv.imshow('Apple detection', img)
 cv.waitKey()
 cv.destroyAllWindows()
 
-#....
+#......
+
 

@@ -17,7 +17,7 @@ def my_cvtGray2(img):
 bgr_img = cv.imread('girl_laughing.jpg')
 
 start = time.time()
-my_cvtGray1(bgr_img)#....
+my_cvtGray1(bgr_img)#......
 print('my_cvtGray1 time:', time.time() - start)
 
 start = time.time()
@@ -28,4 +28,5 @@ start = time.time()
 cv.cvtColor(bgr_img, cv.COLOR_BGR2GRAY)
 
 print('cv.cvtColor time:', time.time() - start)
+
 

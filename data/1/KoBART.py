@@ -13,7 +13,7 @@ def preprocess_function(examples):
     model_inputs["labels"] = labels_encodings["input_ids"]
     return model_inputs
 
-# 전체 데이터셋에 전처리 함수 적용
+# 전체 데이터셋에 전처리 함수 적용..
 print("데이터셋 토큰화 작업을 시작합니다...")
 tokenized_datasets = dataset_dict.map(preprocess_function, batched=True, remove_columns=dataset_dict["train"].column_names)
 print("\n토큰화 작업 완료!")

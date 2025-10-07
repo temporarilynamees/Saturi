@@ -18,7 +18,7 @@ combined_df.dropna(subset=['source', 'target'], inplace=True)
 combined_df = combined_df[combined_df['source'].str.len() > 0]
 print(f"총 {len(combined_df)}개의 문장 쌍으로 학습을 시작합니다.")
 
-# Pandas DataFrame -> Hugging Face Dataset 변환
+# Pandas DataFrame -> Hugging Face Dataset 변환..
 full_dataset = Dataset.from_pandas(combined_df)
 
 # 7:3 비율로 학습/검증 데이터셋 분할

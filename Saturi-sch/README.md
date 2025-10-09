@@ -44,3 +44,22 @@ backend/
 ├─ .gitignore
 ├─ package.json
 └─ README.md
+
+---
+
+
+---
+
+## ⚙️ 설치 & 실행
+```bash
+# 1) 의존성 설치
+cd backend
+npm install
+
+# 2) 환경변수 (backend/.env)
+PORT=3000
+TTS_PROVIDER=gtts
+
+# 3) 실행
+npm start
+# 서버가 3000번 포트에서 정상적으로 실행되었습니다.

@@ -37,11 +37,11 @@ async function speechToText(file) {
         const audioBuffer = fs.readFileSync(wavPath);
         const base64Audio = audioBuffer.toString('base64');
 
-        console.log('Base64 변환 완료:', base64Audio.substring(0, 50) + '...');
-        console.log('Base64 총 길이:', base64Audio.length);
-        console.log('ETRI API 요청 시작...');
-        console.log('API URL:', process.env.API_URL);
-        console.log('Language Code:', 'korean');
+        // console.log('Base64 변환 완료:', base64Audio.substring(0, 50) + '...');
+        // console.log('Base64 총 길이:', base64Audio.length);
+        // console.log('ETRI API 요청 시작...');
+        // console.log('API URL:', process.env.API_URL);
+        // console.log('Language Code:', 'korean');
 
         // ETRI API 요청
         const response = await axios.post(

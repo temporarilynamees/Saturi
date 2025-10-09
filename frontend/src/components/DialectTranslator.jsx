@@ -17,6 +17,7 @@ const DialectTranslator = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [isComposing, setIsComposing] = useState(false);
+  const [direction, setDirection] = useState('jeju to korean'); // 'jeju to korean' or 'korean to jeju'
 
   // 음성 녹음 관련 상태
   const [isRecording, setIsRecording] = useState(false);
@@ -95,7 +96,8 @@ const DialectTranslator = () => {
 
     try {
       const response = await axios.post('/api/translation', {
-        sentence: inputText
+        sentence: inputText,
+        direction: direction
       });
 
       setTranslatedText(response.data.translation || response.data);
@@ -120,6 +122,14 @@ const DialectTranslator = () => {
   };
 
   const handleClear = () => {
+    setInputText('');
+    setTranslatedText('');
+    setError('');
+  };
+
+  // 번역 방향 전환
+  const handleSwapDirection = () => {
+    setDirection(prev => prev === 'jeju to korean' ? 'korean to jeju' : 'jeju to korean');
     setInputText('');
     setTranslatedText('');
     setError('');
@@ -157,13 +167,13 @@ const DialectTranslator = () => {
     <div className="translator-container">
       <div className="translator-header">
         <h1>🗣️ 사투리 번역기</h1>
-        <p>사투리를 표준어로 번역해보세요</p>
+        <p>{direction === 'jeju to korean' ? '사투리를 표준어로 번역해보세요' : '표준어를 사투리로 번역해보세요'}</p>
       </div>
 
       <div className="translator-body">
         <div className="input-section">
           <div className="section-header">
-            <h2>사투리 입력</h2>
+            <h2>{direction === 'jeju to korean' ? '사투리 입력' : '표준어 입력'}</h2>
             <button
               className={`voice-button ${isRecording ? 'listening' : ''}`}
               onClick={handleVoiceInput}
@@ -175,7 +185,7 @@ const DialectTranslator = () => {
           </div>
           <textarea
             className="input-textarea"
-            placeholder="번역할 사투리를 입력하세요..."
+            placeholder={direction === 'jeju to korean' ? '번역할 사투리를 입력하세요...' : '번역할 표준어를 입력하세요...'}
             value={inputText}
             onChange={handleChange}
             onCompositionStart={handleCompositionStart}
@@ -200,11 +210,19 @@ const DialectTranslator = () => {
               <span>→</span>
             )}
           </button>
+          <button
+            className="swap-button"
+            onClick={handleSwapDirection}
+            disabled={isLoading}
+            title="번역 방향 전환"
+          >
+            🔄
+          </button>
         </div>
 
         <div className="output-section">
           <div className="section-header">
-            <h2>표준어 번역</h2>
+            <h2>{direction === 'jeju to korean' ? '표준어 번역' : '사투리 번역'}</h2>
           </div>
           <div className="output-textarea">
             {translatedText || '번역 결과가 여기에 표시됩니다...'}

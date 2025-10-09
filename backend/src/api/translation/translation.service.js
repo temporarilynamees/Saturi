@@ -1,4 +1,4 @@
-async function translateSentence(sentence) {
+async function translateSentence(sentence, direction = 'jeju to korean') {
     /**
      * 여기는 번역모델이 만들어 지면 수정할 예정입니다.
      * 프로토타입 기능으로 매칭 형식으로 만들었습니다.
@@ -6,9 +6,15 @@ async function translateSentence(sentence) {
     const sentenceList = sentence.split(' ');
     console.log(sentenceList);
     const translateSentence = sentenceList.map(word => {
-        const translation = dialectDictionary.jeju.patterns
-        .find(pattern => pattern.dialect == word);
-        return translation ? translation.standard : word;
+        if (direction == 'korean to jeju') {
+            const translation = dialectDictionary.jeju.patterns
+                .find(pattern => pattern.standard == word);
+            return translation ? translation.dialect : word;
+        } else{
+            const translation = dialectDictionary.jeju.patterns
+                .find(pattern => pattern.dialect == word);
+            return translation ? translation.standard : word;
+        }
     });
     return translateSentence.join(' ');
 }

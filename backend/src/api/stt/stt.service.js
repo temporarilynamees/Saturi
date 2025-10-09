@@ -60,10 +60,10 @@ async function speechToText(file) {
             }
         );
 
-        console.log('=== ETRI API 응답 ===');
-        console.log('응답 상태:', response.status);
-        console.log('응답 데이터:', JSON.stringify(response.data, null, 2));
-        console.log('===================');
+        // console.log('=== ETRI API 응답 ===');
+        // console.log('응답 상태:', response.status);
+        // console.log('응답 데이터:', JSON.stringify(response.data, null, 2));
+        // console.log('===================');
 
         fs.unlinkSync(file.path);
         fs.unlinkSync(wavPath);

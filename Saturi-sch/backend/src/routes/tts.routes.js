@@ -1,11 +1,9 @@
-// backend/src/routes/tts.routes.js
 const { Router } = require('express');
 const ctrl = require('../controllers/tts.controller');
 
 const router = Router();
-
-router.get('/speakers', ctrl.getSpeakers);
-router.post('/', ctrl.postTTS);            // { text, speaker?, speed? }
-router.post('/preview', ctrl.postPreview); // 샘플 합성
+router.get('/speakers', ctrl.getSpeakers);   // 예: /api/tts/speakers?lang=jje
+router.post('/', ctrl.postTTS);
+router.post('/preview', ctrl.postPreview);
 
 module.exports = router;

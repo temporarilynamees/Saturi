@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const cors = require('cors');
 const path = require('path');
 const ttsRoutes = require('./routes/tts.routes');
+const pipeRoutes = require('./routes/pipe.routes');
 
 const app = express();
 

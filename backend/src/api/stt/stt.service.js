@@ -3,7 +3,7 @@ const fs = require('fs');
 const ffmpeg = require('fluent-ffmpeg');
 const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 const path = require('path');
-
+// 간단하게 ffmpeg를 이용해서 변환
 ffmpeg.setFfmpegPath(ffmpegPath);
 
 // WebM을 WAV로 변환하는 함수

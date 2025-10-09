@@ -94,5 +94,5 @@ logs
 .DS_Store
 Thumbs.db
 
-cache/
-logs/
+/cache/
+/logs/

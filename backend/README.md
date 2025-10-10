@@ -16,7 +16,7 @@ Node.js와 Express를 사용한 한국어 사투리 번역 및 음성 인식 API
 ```bash
 npm install
 ```
-
+swagger
 ### 2. 환경 변수 설정
 `.env` 파일을 프로젝트 루트에 생성하고 다음 내용을 추가합니다:
 

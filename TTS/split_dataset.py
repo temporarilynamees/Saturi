@@ -1,7 +1,7 @@
 import os
 import random
 
-# 설정값
+# 설정값---
 metadata_path = "dataset/metadata.csv"
 train_ratio = 0.95
 output_train_path = "dataset/train_list.txt"

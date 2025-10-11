@@ -6,7 +6,7 @@ model_name = "tts_models/multilingual/multi-dataset/xtts_v2"
 
 # 2. 목소리 복제에 사용할 음성 파일 경로
 #    가장 깨끗하게 녹음된 5~15초짜리 wav 파일 하나를 지정해주세요.
-#    'dataset/wavs/' 폴더 안에 있는 파일 중 하나를 선택하면 됩니다.
+#    'dataset/wavs/' 폴더 안에 있는 파일 중 하나를 선택하면 됩니다.---
 reference_voice_path = "dataset/wavs/audio_00001.wav"
 
 # 3. 음성으로 변환할 텍스트

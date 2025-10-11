@@ -4,7 +4,7 @@ from pydub import AudioSegment
 import whisper
 from tqdm import tqdm
 
-# --- FFmpeg 경로 직접 지정 (가장 먼저 설정해주세요) ---
+# --- FFmpeg 경로 직접 지정 (가장 먼저 설정해주세요) ------
 # 1. 사용자의 PC에 설치된 ffmpeg.exe 파일의 전체 경로를 입력합니다.
 # 2. 경로의 역슬래시(\)는 슬래시(/)로 바꾸거나, 역슬래시 두 개(\\)로 작성해야 합니다.
 # 예시 1: "C:/ffmpeg/bin/ffmpeg.exe"

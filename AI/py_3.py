@@ -27,7 +27,7 @@ cv.putText(canny_bgr, "Canny Edges", (10, 30), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 2
 # 3. 두 이미지를 수평으로 결합
 final_image = cv.hconcat([img, canny_bgr])
 
-# 4. 창 크기 조절이 가능하도록 설정 후 표시......
+# 4. 창 크기 조절이 가능하도록 설정 후 표시............
 WINDOW_NAME = 'Contour Detection Results'
 cv.namedWindow(WINDOW_NAME, cv.WINDOW_NORMAL)
 cv.resizeWindow(WINDOW_NAME, 1280, 720) # 창의 초기 크기 설정 (가로 1280, 세로 720)
@@ -36,5 +36,6 @@ cv.imshow(WINDOW_NAME, final_image)
 cv.waitKey()
 
 cv.destroyAllWindows()
+
 
 

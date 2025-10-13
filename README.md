@@ -58,6 +58,12 @@ python model_server.py
 
 백엔드 서버: `http://localhost:8000`
 
+https://drive.google.com/file/d/1RlCuxPEE6bpfJu8XEWKSSY-bs-VvzOhw/view?usp=sharing
+해당 링크에서 모델 다운로드 후 
+Ai-server 디렉토리에 압축해제
+
+
+
 ### 2. 프론트엔드 실행
 
 ```bash

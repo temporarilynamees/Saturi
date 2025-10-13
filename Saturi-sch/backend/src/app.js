@@ -3,8 +3,12 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const path = require('path');
+
 const ttsRoutes = require('./routes/tts.routes');
 const pipeRoutes = require('./routes/pipe.routes');
+
+//새로 추가
+const translationRoutes = require('./routes/translation.routes');
 
 const app = express();
 
@@ -21,4 +25,7 @@ app.get('/health', (_req, res) => res.json({ ok: true }));
 // TTS API
 app.use('/api/tts', ttsRoutes);
 
+
+app.use('/api/translation', translationRoutes);
+app.use('/api/pipe', pipeRoutes);
 module.exports = app;

@@ -1,4 +1,6 @@
-import { useState, useRef } from 'react';
+// DialectTranslator.jsx
+
+import { useState, useRef, useCallback, useMemo } from 'react'; // useCallback, useMemo 추가
 import axios from 'axios';
 import './DialectTranslator.css';
 
@@ -17,7 +19,7 @@ const DialectTranslator = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [isComposing, setIsComposing] = useState(false);
-  const [direction, setDirection] = useState('jeju to korean'); // 'jeju to korean' or 'korean to jeju'
+  const [direction, setDirection] = useState('jeju to korean');
 
   // 음성 녹음 관련 상태
   const [isRecording, setIsRecording] = useState(false);
@@ -74,7 +76,6 @@ const DialectTranslator = () => {
         }
       });
 
-      // STT 결과를 입력창에 표시
       setInputText(response.data.text || response.data.return_object?.recognized || '');
     } catch (err) {
       setError('음성 인식 중 오류가 발생했습니다.');
@@ -83,10 +84,11 @@ const DialectTranslator = () => {
       setIsLoading(false);
     }
   };
+  
 
-  // 실제 번역 로직
-  const executeTranslate = async (inputText) => {
-    if (!inputText.trim()) {
+  //    direction 상태가 바뀔 때마다 이 함수가 최신 direction 값을 참조하여 재생성됩니다.
+  const executeTranslate = useCallback(async (textToTranslate) => {
+    if (!textToTranslate.trim()) {
       setError('번역할 문장을 입력해주세요.');
       return;
     }
@@ -96,8 +98,8 @@ const DialectTranslator = () => {
 
     try {
       const response = await axios.post('/api/translation', {
-        sentence: inputText,
-        direction: direction
+        sentence: textToTranslate,
+        direction: direction // 항상 최신 direction 값을 사용하게 됩니다.
       });
 
       setTranslatedText(response.data.translation || response.data);
@@ -107,19 +109,21 @@ const DialectTranslator = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [direction]); // 의존성 배열에 'direction'을 추가
 
-  const debouncedTranslateRef = useRef(null);
-
-  if (!debouncedTranslateRef.current) {
-    debouncedTranslateRef.current = debounce((inputText) => {
-      executeTranslate(inputText);
-    }, 300);
-  }
-
+  // 2. useMemo를 사용해 debounced 함수를 생성합니다.
+  //    executeTranslate 함수가 변경될 때만 debounce 함수를 새로 만듭니다.
+  const debouncedTranslate = useMemo(
+    () => debounce((text) => executeTranslate(text), 300),
+    [executeTranslate]
+  );
+  
+  // 3. 기존의 복잡한 useRef 로직을 제거하고 간단하게 만듭니다.
   const handleTranslate = () => {
-    debouncedTranslateRef.current(inputText);
+    debouncedTranslate(inputText);
   };
+  
+
 
   const handleClear = () => {
     setInputText('');
@@ -127,7 +131,6 @@ const DialectTranslator = () => {
     setError('');
   };
 
-  // 번역 방향 전환
   const handleSwapDirection = () => {
     setDirection(prev => prev === 'jeju to korean' ? 'korean to jeju' : 'jeju to korean');
     setInputText('');
@@ -135,7 +138,6 @@ const DialectTranslator = () => {
     setError('');
   };
 
-  // 음성 입력 버튼 핸들러
   const handleVoiceInput = () => {
     if (isRecording) {
       stopRecording();
@@ -144,17 +146,9 @@ const DialectTranslator = () => {
     }
   };
 
-  const handleCompositionStart = () => {
-    setIsComposing(true);
-  };
-
-  const handleCompositionEnd = () => {
-    setIsComposing(false);
-  };
-
-  const handleChange = (e) => {
-    setInputText(e.target.value);
-  };
+  const handleCompositionStart = () => setIsComposing(true);
+  const handleCompositionEnd = () => setIsComposing(false);
+  const handleChange = (e) => setInputText(e.target.value);
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey && !isComposing) {

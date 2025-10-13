@@ -41,6 +41,23 @@ npm start
 
 백엔드 서버: `http://localhost:5000`
 
+### 1-1. AI실행
+
+```bash
+# ai 디렉토리로 이동
+cd Ai-server
+
+# 의존성 설치 (처음 한 번만)
+npm install
+
+# 개발 서버 실행
+python model_server.py
+
+```
+
+
+백엔드 서버: `http://localhost:8000`
+
 ### 2. 프론트엔드 실행
 
 ```bash

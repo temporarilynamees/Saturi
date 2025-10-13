@@ -48,7 +48,7 @@ npm start
 cd Ai-server
 
 # 의존성 설치 (처음 한 번만)
-npm install
+pip install transformers
 
 # 개발 서버 실행
 python model_server.py

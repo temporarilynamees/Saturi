@@ -55,7 +55,6 @@ python model_server.py
 
 ```
 
-
 백엔드 서버: `http://localhost:8000`
 
 https://drive.google.com/file/d/1RlCuxPEE6bpfJu8XEWKSSY-bs-VvzOhw/view?usp=sharing
@@ -146,12 +145,11 @@ GET /api/translation?sentence=사투리문장
 - Express.js
 - CORS
 - dotenv
-
 ### Frontend
 - React 18
 - Vite
 - Axios
-- Web Speech API (음성 인식)
+- ETRI API (음성 인식)
 - CSS3 (Animations & Responsive)
 
 ## 🎤 음성 입력 사용 방법

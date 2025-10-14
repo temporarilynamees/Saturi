@@ -19,12 +19,16 @@ const DialectTranslator = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [isComposing, setIsComposing] = useState(false);
-  const [direction, setDirection] = useState('jeju to korean');
+  const [direction, setDirection] = useState('jeju_to_std');
 
   // 음성 녹음 관련 상태
   const [isRecording, setIsRecording] = useState(false);
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
+
+  // TTS 관련 상태
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef(null);
 
   // 음성 녹음 시작
   const startRecording = async () => {
@@ -84,7 +88,61 @@ const DialectTranslator = () => {
       setIsLoading(false);
     }
   };
-  
+
+  // TTS 음성 재생 함수
+  const playTranslatedText = async () => {
+    if (!translatedText.trim()) {
+      setError('재생할 번역 결과가 없습니다.');
+      return;
+    }
+
+    // 이미 재생 중이면 중지
+    if (isPlaying && audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+      setIsPlaying(false);
+      return;
+    }
+
+    setIsPlaying(true);
+    setError('');
+
+    try {
+      // direction에 따라 lang 설정
+      const lang = direction === 'jeju_to_std' ? 'ko' : 'jje';
+
+      const response = await axios.post('/api/tts', {
+        text: translatedText,
+        lang: lang,
+        speaker: 'female_kr',
+        speed: 1.0
+      }, {
+        responseType: 'blob'
+      });
+
+      const audioUrl = URL.createObjectURL(response.data);
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
+
+      audio.onended = () => {
+        setIsPlaying(false);
+        URL.revokeObjectURL(audioUrl);
+        audioRef.current = null;
+      };
+
+      audio.onerror = () => {
+        setError('음성 재생 중 오류가 발생했습니다.');
+        setIsPlaying(false);
+        audioRef.current = null;
+      };
+
+      await audio.play();
+    } catch (err) {
+      setError('음성 생성 중 오류가 발생했습니다.');
+      console.error('TTS error:', err);
+      setIsPlaying(false);
+    }
+  };
 
   //    direction 상태가 바뀔 때마다 이 함수가 최신 direction 값을 참조하여 재생성됩니다.
   const executeTranslate = useCallback(async (textToTranslate) => {
@@ -117,25 +175,35 @@ const DialectTranslator = () => {
     () => debounce((text) => executeTranslate(text), 300),
     [executeTranslate]
   );
-  
+
   // 3. 기존의 복잡한 useRef 로직을 제거하고 간단하게 만듭니다.
   const handleTranslate = () => {
     debouncedTranslate(inputText);
   };
-  
-
 
   const handleClear = () => {
     setInputText('');
     setTranslatedText('');
     setError('');
+    // 재생 중인 오디오 중지
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+      setIsPlaying(false);
+    }
   };
 
   const handleSwapDirection = () => {
-    setDirection(prev => prev === 'jeju to korean' ? 'korean to jeju' : 'jeju to korean');
+    setDirection(prev => prev === 'jeju_to_std' ? 'std_to_jeju' : 'jeju_to_std');
     setInputText('');
     setTranslatedText('');
     setError('');
+    // 재생 중인 오디오 중지
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+      setIsPlaying(false);
+    }
   };
 
   const handleVoiceInput = () => {
@@ -161,13 +229,13 @@ const DialectTranslator = () => {
     <div className="translator-container">
       <div className="translator-header">
         <h1>🗣️ 사투리 번역기</h1>
-        <p>{direction === 'jeju to korean' ? '사투리를 표준어로 번역해보세요' : '표준어를 사투리로 번역해보세요'}</p>
+        <p>{direction === 'jeju_to_std' ? '사투리를 표준어로 번역해보세요' : '표준어를 사투리로 번역해보세요'}</p>
       </div>
 
       <div className="translator-body">
         <div className="input-section">
           <div className="section-header">
-            <h2>{direction === 'jeju to korean' ? '사투리 입력' : '표준어 입력'}</h2>
+            <h2>{direction === 'jeju_to_std' ? '사투리 입력' : '표준어 입력'}</h2>
             <button
               className={`voice-button ${isRecording ? 'listening' : ''}`}
               onClick={handleVoiceInput}
@@ -179,7 +247,7 @@ const DialectTranslator = () => {
           </div>
           <textarea
             className="input-textarea"
-            placeholder={direction === 'jeju to korean' ? '번역할 사투리를 입력하세요...' : '번역할 표준어를 입력하세요...'}
+            placeholder={direction === 'jeju_to_std' ? '번역할 사투리를 입력하세요...' : '번역할 표준어를 입력하세요...'}
             value={inputText}
             onChange={handleChange}
             onCompositionStart={handleCompositionStart}
@@ -216,7 +284,17 @@ const DialectTranslator = () => {
 
         <div className="output-section">
           <div className="section-header">
-            <h2>{direction === 'jeju to korean' ? '표준어 번역' : '사투리 번역'}</h2>
+            <h2>{direction === 'jeju_to_std' ? '표준어 번역' : '사투리 번역'}</h2>
+            {translatedText && (
+              <button
+                className={`play-button ${isPlaying ? 'playing' : ''}`}
+                onClick={playTranslatedText}
+                disabled={!translatedText.trim()}
+                title={isPlaying ? '재생 중지' : '음성으로 듣기'}
+              >
+                {isPlaying ? '⏸️ 중지' : '🔊 듣기'}
+              </button>
+            )}
           </div>
           <div className="output-textarea">
             {translatedText || '번역 결과가 여기에 표시됩니다...'}

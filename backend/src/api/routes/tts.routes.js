@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const ctrl = require('../controllers/tts.controller');
+const ctrl = require('../controller/tts.controller');
 
 const router = Router();
 router.get('/speakers', ctrl.getSpeakers);   // 예: /api/tts/speakers?lang=jje

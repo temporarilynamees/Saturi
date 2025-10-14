@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const ctrl = require('../controllers/pipe.controller');
+const ctrl = require('../controller/pipe.controller');
 const router = Router();
 
 // 한 번에: text + direction(jje2ko|ko2jje) -> 번역 -> TTS(mp3) 반환

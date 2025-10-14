@@ -1,4 +1,4 @@
-const service = require("./stt.service");
+const service = require("../service/stt.service");
 
 async function speechToText(req, res, next) {
     try {

@@ -1,22 +1,64 @@
-async function translateSentence(sentence, direction = 'jeju to korean') {
-    /**
-     * 여기는 번역모델이 만들어 지면 수정할 예정입니다.
-     * 프로토타입 기능으로 매칭 형식으로 만들었습니다.
-     */
+const axios = require('axios');
+
+// AI 서버 설정
+const AI_SERVER_URL = process.env.AI_SERVER_URL;;
+
+/**
+ * AI 서버를 통해 번역을 수행합니다.
+ * @param {string} sentence - 번역할 문장
+ * @param {string} direction - 번역 방향 ('jeju_to_std' 또는 'std_to_jeju')
+ * @returns {Promise<string>} - 번역된 문장
+ */
+async function translateSentence(sentence, direction = 'jeju_to_std') {
+    try {
+        console.log(sentence, direction);
+        // AI 서버로 번역 요청 (direction을 그대로 전달)
+        const response = await axios.post(`${AI_SERVER_URL}/translate`, {
+            sentence: sentence,
+            direction: direction
+        }, {
+            timeout: 100000, // 100초 타임아웃
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.data && response.data.translation) {
+            return response.data.translation;
+        } else {
+            throw new Error('Invalid response from AI server');
+        }
+
+    } catch (error) {
+        console.error('Translation error:', error.message);
+
+        // AI 서버 연결 실패 시 fallback (기존 사전 기반 번역)
+        if (error.code === 'ECONNREFUSED' || error.code === 'ETIMEDOUT') {
+            console.warn('AI server unavailable, using fallback dictionary translation');
+            return fallbackTranslate(sentence, direction);
+        }
+
+        throw error;
+    }
+}
+
+/**
+ * AI 서버 연결 실패 시 사용할 fallback 번역 (기존 사전 기반)
+ */
+function fallbackTranslate(sentence, direction) {
     const sentenceList = sentence.split(' ');
-    console.log(sentenceList);
-    const translateSentence = sentenceList.map(word => {
-        if (direction == 'korean to jeju') {
+    const translatedWords = sentenceList.map(word => {
+        if (direction === 'std_to_jeju') {
             const translation = dialectDictionary.jeju.patterns
-                .find(pattern => pattern.standard == word);
+                .find(pattern => pattern.standard === word);
             return translation ? translation.dialect : word;
-        } else{
+        } else { // jeju_to_std
             const translation = dialectDictionary.jeju.patterns
-                .find(pattern => pattern.dialect == word);
+                .find(pattern => pattern.dialect === word);
             return translation ? translation.standard : word;
         }
     });
-    return translateSentence.join(' ');
+    return translatedWords.join(' ');
 }
 
 const dialectDictionary = {

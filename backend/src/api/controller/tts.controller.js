@@ -1,5 +1,4 @@
-// 상단 그대로
-const tts = require('../services/tts');
+const tts = require('../service/tts');
 const Joi = require('joi');
 
 const ttsSchema = Joi.object({

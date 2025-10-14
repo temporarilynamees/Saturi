@@ -1,6 +1,6 @@
 const Joi = require('joi');
-const tts = require('../services/tts');
-const translate = require('../services/translate'); // 스텁(아래 생성)
+const tts = require('../service/tts');
+const { translateSentence } = require('../service/translation.service');
 
 const schema = Joi.object({
   text: Joi.string().trim().min(1).max(1000).required(),
@@ -14,7 +14,11 @@ exports.translateAndTTS = async (req, res) => {
   if (error) return res.status(400).json({ message: error.message });
   try {
     const { text, direction, speaker, speed } = value;
-    const out = await translate.translate(text, direction); // 실제 모델로 대체 예정
+
+    // direction 형식 변환: 'jje2ko' -> 'jeju to korean', 'ko2jje' -> 'korean to jeju'
+    const translationDirection = direction === 'jje2ko' ? 'jeju to korean' : 'korean to jeju';
+    const out = await translateSentence(text, translationDirection);
+
     const targetLang = direction === 'ko2jje' ? 'jje' : 'ko';
     const { stream, mime, fromCache } = await tts.synthesize({ text: out, lang: targetLang, speaker, speed });
     res.set('Content-Type', mime);

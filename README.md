@@ -127,7 +127,7 @@ npm start
 ```
 ## API 엔드포인트
 
-### 번역 API
+### 번역 API(Swagger로 따로 관리중)
 ```
 GET /api/translation?sentence=사투리문장
 ```

@@ -86,6 +86,13 @@ npm run build
 npm run preview
 ```
 
+### 4. 프론트엔드 프로덕션 빌드
+
+```bash
+cd frontend
+npm run build
+npm run preview
+```
 빌드된 파일은 `frontend/dist/` 폴더에 생성됩니다.
 
 ## 전체 실행 가이드

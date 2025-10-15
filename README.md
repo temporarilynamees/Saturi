@@ -86,7 +86,7 @@ npm run build
 npm run preview
 ```
 
-### 4. 프론트엔드 프로덕션 빌드
+### 4. swagger API 목록 확인
 
 ```bash
 cd frontend

@@ -226,11 +226,15 @@ const DialectTranslator = () => {
   };
 
   return (
-    <div className="translator-container">
-      <div className="translator-header">
-        <h1>🗣️ 제주어 번역기</h1>
-        <p>{direction === 'jeju_to_std' ? '제주어를 표준어로 번역해보세요' : '표준어를 제주어로 번역해보세요'}</p>
-      </div>
+    <>
+      <header className="site-header">
+        <div className="logo">MalMoe</div>
+      </header>
+      <div className="translator-container">
+        <div className="translator-header">
+          <h1>🗣️ 제주어 번역기</h1>
+          <p>{direction === 'jeju_to_std' ? '제주어를 표준어로 번역해보세요' : '표준어를 제주어로 번역해보세요'}</p>
+        </div>
 
       <div className="translator-body">
         <div className="input-section">
@@ -317,7 +321,8 @@ const DialectTranslator = () => {
           🔄 초기화
         </button>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

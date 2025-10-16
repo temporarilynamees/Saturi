@@ -93,8 +93,12 @@ npm run preview
 ```
 url : `http://localhost:3000/api-docs`
 
-## 전체 실행 가이드
+### 5. .env 경로
+```bash
+backend 폴더 바로 아래에 
+```
 
+## 전체 실행 가이드
 ### 개발 환경 (Development)
 
 **터미널 1 - 백엔드:**

@@ -1,6 +1,4 @@
-// DialectTranslator.jsx
-
-import { useState, useRef, useCallback, useMemo } from 'react'; // useCallback, useMemo 추가
+import { useState, useRef, useCallback, useMemo } from 'react';
 import axios from 'axios';
 import './DialectTranslator.css';
 
@@ -26,9 +24,89 @@ const DialectTranslator = () => {
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
 
-  // TTS 관련 상태
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef(null);
+  // TTS 관련 상태 - 입력과 출력을 분리하여 관리
+  const [isInputPlaying, setIsInputPlaying] = useState(false);
+  const [isOutputPlaying, setIsOutputPlaying] = useState(false);
+  const inputAudioRef = useRef(null);
+  const outputAudioRef = useRef(null);
+
+
+
+
+
+  // --- 공통 오디오 재생 함수 ---
+  const playAudio = async ({ text, audioRef, setIsPlaying }) => {
+    if (!text.trim()) {
+      setError('재생할 텍스트가 없습니다.');
+      return;
+    }
+
+    // 이미 재생 중이면 중지
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+      setIsPlaying(false);
+      return;
+    }
+
+    setIsPlaying(true);
+    setError('');
+
+    try {
+      // 💡 [수정] 항상 새로 만든 커스텀 TTS API를 호출하도록 고정합니다.
+      const apiUrl = '/api/custom-tts';
+      const requestData = { text };
+
+      const response = await axios.post(apiUrl, requestData, {
+        responseType: 'blob'
+      });
+
+      const audioUrl = URL.createObjectURL(response.data);
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
+
+      audio.onended = () => {
+        setIsPlaying(false);
+        URL.revokeObjectURL(audioUrl);
+        audioRef.current = null;
+      };
+
+      audio.onerror = () => {
+        setError('음성 재생 중 오류가 발생했습니다.');
+        setIsPlaying(false);
+        audioRef.current = null;
+      };
+
+      await audio.play();
+
+    } catch (err) {
+      setError('음성 생성 중 오류가 발생했습니다.');
+      console.error('TTS error:', err);
+      setIsPlaying(false);
+    }
+  };
+
+
+
+
+  // --- 입력 텍스트 재생 핸들러 ---
+  const handlePlayInput = () => {
+    playAudio({
+      text: inputText,
+      audioRef: inputAudioRef,
+      setIsPlaying: setIsInputPlaying,
+    });
+  };
+
+
+  // --- 번역된 텍스트(출력) 재생 핸들러 ---
+  const handlePlayOutput = () => {
+    playAudio({
+      text: translatedText,
+      audioRef: outputAudioRef,
+      setIsPlaying: setIsOutputPlaying,
+    });
+  };
 
   // 음성 녹음 시작
   const startRecording = async () => {
@@ -89,62 +167,7 @@ const DialectTranslator = () => {
     }
   };
 
-  // TTS 음성 재생 함수
-  const playTranslatedText = async () => {
-    if (!translatedText.trim()) {
-      setError('재생할 번역 결과가 없습니다.');
-      return;
-    }
-
-    // 이미 재생 중이면 중지
-    if (isPlaying && audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
-      setIsPlaying(false);
-      return;
-    }
-
-    setIsPlaying(true);
-    setError('');
-
-    try {
-      // direction에 따라 lang 설정
-      const lang = direction === 'jeju_to_std' ? 'ko' : 'jje';
-
-      const response = await axios.post('/api/tts', {
-        text: translatedText,
-        lang: lang,
-        speaker: 'female_kr',
-        speed: 1.0
-      }, {
-        responseType: 'blob'
-      });
-
-      const audioUrl = URL.createObjectURL(response.data);
-      const audio = new Audio(audioUrl);
-      audioRef.current = audio;
-
-      audio.onended = () => {
-        setIsPlaying(false);
-        URL.revokeObjectURL(audioUrl);
-        audioRef.current = null;
-      };
-
-      audio.onerror = () => {
-        setError('음성 재생 중 오류가 발생했습니다.');
-        setIsPlaying(false);
-        audioRef.current = null;
-      };
-
-      await audio.play();
-    } catch (err) {
-      setError('음성 생성 중 오류가 발생했습니다.');
-      console.error('TTS error:', err);
-      setIsPlaying(false);
-    }
-  };
-
-  //    direction 상태가 바뀔 때마다 이 함수가 최신 direction 값을 참조하여 재생성됩니다.
+  // 번역 실행 함수
   const executeTranslate = useCallback(async (textToTranslate) => {
     if (!textToTranslate.trim()) {
       setError('번역할 문장을 입력해주세요.');
@@ -157,7 +180,7 @@ const DialectTranslator = () => {
     try {
       const response = await axios.post('/api/translation', {
         sentence: textToTranslate,
-        direction: direction // 항상 최신 direction 값을 사용하게 됩니다.
+        direction: direction
       });
 
       setTranslatedText(response.data.translation || response.data);
@@ -167,30 +190,35 @@ const DialectTranslator = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [direction]); // 의존성 배열에 'direction'을 추가
+  }, [direction]);
 
-  // 2. useMemo를 사용해 debounced 함수를 생성합니다.
-  //    executeTranslate 함수가 변경될 때만 debounce 함수를 새로 만듭니다.
   const debouncedTranslate = useMemo(
     () => debounce((text) => executeTranslate(text), 300),
     [executeTranslate]
   );
 
-  // 3. 기존의 복잡한 useRef 로직을 제거하고 간단하게 만듭니다.
   const handleTranslate = () => {
     debouncedTranslate(inputText);
+  };
+
+  const stopAllAudio = () => {
+    if (inputAudioRef.current) {
+      inputAudioRef.current.pause();
+      inputAudioRef.current = null;
+      setIsInputPlaying(false);
+    }
+    if (outputAudioRef.current) {
+      outputAudioRef.current.pause();
+      outputAudioRef.current = null;
+      setIsOutputPlaying(false);
+    }
   };
 
   const handleClear = () => {
     setInputText('');
     setTranslatedText('');
     setError('');
-    // 재생 중인 오디오 중지
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
-      setIsPlaying(false);
-    }
+    stopAllAudio();
   };
 
   const handleSwapDirection = () => {
@@ -198,12 +226,7 @@ const DialectTranslator = () => {
     setInputText('');
     setTranslatedText('');
     setError('');
-    // 재생 중인 오디오 중지
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
-      setIsPlaying(false);
-    }
+    stopAllAudio();
   };
 
   const handleVoiceInput = () => {
@@ -236,14 +259,26 @@ const DialectTranslator = () => {
         <div className="input-section">
           <div className="section-header">
             <h2>{direction === 'jeju_to_std' ? '사투리 입력' : '표준어 입력'}</h2>
-            <button
-              className={`voice-button ${isRecording ? 'listening' : ''}`}
-              onClick={handleVoiceInput}
-              disabled={isLoading}
-              title={isRecording ? '녹음 중지' : '음성 입력'}
-            >
-              {isRecording ? '🎤 녹음 중...' : '🎤 음성 입력'}
-            </button>
+            <div>
+              {inputText && (
+                <button
+                  className={`play-button ${isInputPlaying ? 'playing' : ''}`}
+                  onClick={handlePlayInput}
+                  disabled={!inputText.trim()}
+                  title={isInputPlaying ? '재생 중지' : '입력 내용 듣기'}
+                >
+                  {isInputPlaying ? '⏸️ 중지' : '🔊 듣기'}
+                </button>
+              )}
+              <button
+                className={`voice-button ${isRecording ? 'listening' : ''}`}
+                onClick={handleVoiceInput}
+                disabled={isLoading}
+                title={isRecording ? '녹음 중지' : '음성 입력'}
+              >
+                {isRecording ? '🎤 녹음 중...' : '🎤 음성 입력'}
+              </button>
+            </div>
           </div>
           <textarea
             className="input-textarea"
@@ -287,12 +322,12 @@ const DialectTranslator = () => {
             <h2>{direction === 'jeju_to_std' ? '표준어 번역' : '사투리 번역'}</h2>
             {translatedText && (
               <button
-                className={`play-button ${isPlaying ? 'playing' : ''}`}
-                onClick={playTranslatedText}
+                className={`play-button ${isOutputPlaying ? 'playing' : ''}`}
+                onClick={handlePlayOutput}
                 disabled={!translatedText.trim()}
-                title={isPlaying ? '재생 중지' : '음성으로 듣기'}
+                title={isOutputPlaying ? '재생 중지' : '번역 결과 듣기'}
               >
-                {isPlaying ? '⏸️ 중지' : '🔊 듣기'}
+                {isOutputPlaying ? '⏸️ 중지' : '🔊 듣기'}
               </button>
             )}
           </div>

@@ -8,6 +8,8 @@ const translation = require('./api/routes/translation.routes');
 const stt = require('./api/routes/stt.routes');
 const morgan = require('morgan');
 const ttsRoutes = require('./api/routes/tts.routes');
+const customTtsRoutes = require('./api/routes/customTts.routes');  // 👈 [추가] 새로운 라우트 등록
+
 
 app.use(morgan('dev'));
 app.use(express.json({ limit: '2mb' }));
@@ -19,7 +21,7 @@ app.use('/api/stt', stt);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 app.get('/health', (_req, res) => res.json({ ok: true }));
 app.use('/api/tts', ttsRoutes);
-
+app.use('/api/custom-tts', customTtsRoutes); // 👈 [추가] 새로운 라우트 등록
 /**
  * 정적인 html 파일 반환하는 라우트 핸들러들
  */

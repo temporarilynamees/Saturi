@@ -90,8 +90,8 @@ npm run preview
 
 ```bash
 1.의 백엔드 실행과 동일함.
-url : `http://localhost:3000/api-docs`
 ```
+url : `http://localhost:3000/api-docs`
 
 ## 전체 실행 가이드
 

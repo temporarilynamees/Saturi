@@ -17,3 +17,8 @@ backend/src/app.js: 새로 만든 quiz.router.js를 서버에 등록하여, 실�
 backend/serviceAccountKey.json: Firebase DB에 접속하기 위한 키 파일을 추가했습니다. (이 파일은 추가로 공유해두리겠습니다.)
 
 firebase-admin 라이브러리: npm install firebase-admin 명령어로 설치했습니다.
+
+2. 프론트엔드 (Frontend) 변경 사항
+ 
+frontend/src/components/DialectTranslator.jsx 수정
+

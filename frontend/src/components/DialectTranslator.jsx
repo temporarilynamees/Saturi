@@ -31,8 +31,64 @@ const DialectTranslator = () => {
   const outputAudioRef = useRef(null);
 
 
+// === 퀴즈 관련 state 추가 ===
+  const [isQuizMode, setIsQuizMode] = useState(false); // 퀴즈 모드 여부
+  const [currentQuestion, setCurrentQuestion] = useState(''); // 현재 문제 (사투리)
+  const [userAnswer, setUserAnswer] = useState(''); // 사용자가 입력한 답
+  const [quizResult, setQuizResult] = useState(null); // 채점 결과
 
+  // === 퀴즈 기능 함수들 추가 ===
+  const handleGetQuiz = async () => {
+    setIsLoading(true);
+    setError('');
+    stopAllAudio(); // 퀴즈 시작 시 모든 오디오 중지
+    try {
+      const response = await axios.get('/api/quiz/new');
+      setIsQuizMode(true);
+      setCurrentQuestion(response.data.dialect);
+      setUserAnswer('');
+      setTranslatedText('');
+      setQuizResult(null);
+      setInputText(response.data.dialect);
+    } catch (err) {
+      setError("퀴즈 문제를 불러오는 데 실패했습니다.");
+      console.error("Quiz fetch error:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  const handleCheckAnswer = async () => {
+    if (!userAnswer.trim()) {
+      setError("정답을 입력해주세요.");
+      return;
+    }
+    setIsLoading(true);
+    setError('');
+    try {
+      const response = await axios.post('/api/quiz/check', {
+        dialectQuestion: currentQuestion,
+        userAnswer: userAnswer
+      });
+      setQuizResult(response.data);
+    } catch (err) {
+      setError("정답 확인 중 오류가 발생했습니다.");
+      console.error("Answer check error:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleReturnToTranslate = () => {
+    setIsQuizMode(false);
+    setCurrentQuestion('');
+    setUserAnswer('');
+    setQuizResult(null);
+    setInputText('');
+    setTranslatedText('');
+    setError('');
+    stopAllAudio(); // 번역기로 돌아갈 때 모든 오디오 중지
+  };
 
   // --- 공통 오디오 재생 함수 ---
   const playAudio = async ({ text, audioRef, setIsPlaying }) => {
@@ -247,111 +303,99 @@ const DialectTranslator = () => {
       handleTranslate();
     }
   };
-
+// 사투리 헤더 수정, 왼쪽 입력창 수정 (input-section), 가운데 버튼 수정(arrow-section), 오른쪽 결과창 수정 (output-section)
   return (
     <div className="translator-container">
-      <div className="translator-header">
-        <h1>🗣️ 사투리 번역기</h1>
-        <p>{direction === 'jeju_to_std' ? '사투리를 표준어로 번역해보세요' : '표준어를 사투리로 번역해보세요'}</p>
-      </div>
+<div className="translator-header"> 
+  <h1>🗣️ 사투리 번역기</h1>
+  <p>{isQuizMode ? '사투리 퀴즈를 풀어보세요!' : (direction === 'jeju_to_std' ? '사투리를 표준어로 번역해보세요' : '표준어를 사투리로 번역해보세요')}</p>
+  <button className="mode-toggle-button" onClick={isQuizMode ? handleReturnToTranslate : handleGetQuiz}>
+    {isQuizMode ? '번역기로 돌아가기' : '✍️ 사투리 퀴즈 풀기'}
+  </button>
+</div>
 
-      <div className="translator-body">
-        <div className="input-section">
-          <div className="section-header">
-            <h2>{direction === 'jeju_to_std' ? '사투리 입력' : '표준어 입력'}</h2>
-            <div>
-              {inputText && (
-                <button
-                  className={`play-button ${isInputPlaying ? 'playing' : ''}`}
-                  onClick={handlePlayInput}
-                  disabled={!inputText.trim()}
-                  title={isInputPlaying ? '재생 중지' : '입력 내용 듣기'}
-                >
-                  {isInputPlaying ? '⏸️ 중지' : '🔊 듣기'}
-                </button>
-              )}
-              <button
-                className={`voice-button ${isRecording ? 'listening' : ''}`}
-                onClick={handleVoiceInput}
-                disabled={isLoading}
-                title={isRecording ? '녹음 중지' : '음성 입력'}
-              >
-                {isRecording ? '🎤 녹음 중...' : '🎤 음성 입력'}
-              </button>
-            </div>
-          </div>
-          <textarea
-            className="input-textarea"
-            placeholder={direction === 'jeju_to_std' ? '번역할 사투리를 입력하세요...' : '번역할 표준어를 입력하세요...'}
-            value={inputText}
-            onChange={handleChange}
-            onCompositionStart={handleCompositionStart}
-            onCompositionEnd={handleCompositionEnd}
-            onKeyDown={handleKeyDown}
-            disabled={isLoading}
-          />
-          <div className="char-count">
-            {inputText.length} / 500
-          </div>
-        </div>
-
-        <div className="arrow-section">
-          <button
-            className="translate-button"
-            onClick={handleTranslate}
-            disabled={isLoading || !inputText.trim()}
-          >
-            {isLoading ? (
-              <span className="loading-spinner">⏳</span>
-            ) : (
-              <span>→</span>
-            )}
+      <div className="translator-body"> 
+<div className="input-section">
+  <div className="section-header">
+    <h2>{isQuizMode ? '문제 (사투리)' : (direction === 'jeju_to_std' ? '사투리 입력' : '표준어 입력')}</h2>
+    {!isQuizMode && ( // 퀴즈 모드가 아닐 때만 버튼들 표시
+      <div>
+        {inputText && (
+          <button className={`play-button ${isInputPlaying ? 'playing' : ''}`} onClick={handlePlayInput} disabled={!inputText.trim()} title={isInputPlaying ? '재생 중지' : '입력 내용 듣기'}>
+            {isInputPlaying ? '⏸️ 중지' : '🔊 듣기'}
           </button>
-          <button
-            className="swap-button"
-            onClick={handleSwapDirection}
-            disabled={isLoading}
-            title="번역 방향 전환"
-          >
-            🔄
-          </button>
-        </div>
-
-        <div className="output-section">
-          <div className="section-header">
-            <h2>{direction === 'jeju_to_std' ? '표준어 번역' : '사투리 번역'}</h2>
-            {translatedText && (
-              <button
-                className={`play-button ${isOutputPlaying ? 'playing' : ''}`}
-                onClick={handlePlayOutput}
-                disabled={!translatedText.trim()}
-                title={isOutputPlaying ? '재생 중지' : '번역 결과 듣기'}
-              >
-                {isOutputPlaying ? '⏸️ 중지' : '🔊 듣기'}
-              </button>
-            )}
-          </div>
-          <div className="output-textarea">
-            {translatedText || '번역 결과가 여기에 표시됩니다...'}
-          </div>
-        </div>
-      </div>
-
-      {error && (
-        <div className="error-message">
-          ⚠️ {error}
-        </div>
-      )}
-
-      <div className="action-buttons">
-        <button
-          className="clear-button"
-          onClick={handleClear}
-          disabled={!inputText && !translatedText}
-        >
-          🔄 초기화
+        )}
+        <button className={`voice-button ${isRecording ? 'listening' : ''}`} onClick={handleVoiceInput} disabled={isLoading} title={isRecording ? '녹음 중지' : '음성 입력'}>
+          {isRecording ? '🎤 녹음 중...' : '🎤 음성 입력'}
         </button>
       </div>
+    )}
+  </div>
+  <textarea
+    className="input-textarea"
+    placeholder={isQuizMode ? '' : '번역할 내용을 입력하세요...'}
+    value={isQuizMode ? currentQuestion : inputText}
+    onChange={handleChange}
+    onCompositionStart={handleCompositionStart}
+    onCompositionEnd={handleCompositionEnd}
+    onKeyDown={handleKeyDown}
+    disabled={isLoading || isQuizMode}
+  />
+  {!isQuizMode && (
+    <div className="char-count">{inputText.length} / 500</div>
+  )}
+</div>
+        
+<div className="arrow-section">
+  <button className="translate-button" onClick={isQuizMode ? handleCheckAnswer : handleTranslate} disabled={isLoading || (isQuizMode ? !userAnswer.trim() : !inputText.trim())}>
+    {isLoading ? <span className="loading-spinner">⏳</span> : <span>→</span>}
+  </button>
+  {!isQuizMode && (
+    <button className="swap-button" onClick={handleSwapDirection} disabled={isLoading} title="번역 방향 전환">
+      🔄
+    </button>
+  )}
+</div>
+
+<div className="output-section">
+  <div className="section-header">
+    <h2>{isQuizMode ? '정답 입력 (표준어)' : (direction === 'jeju_to_std' ? '표준어 번역' : '사투리 번역')}</h2>
+    {!isQuizMode && translatedText && (
+      <button className={`play-button ${isOutputPlaying ? 'playing' : ''}`} onClick={handlePlayOutput} disabled={!translatedText.trim()} title={isOutputPlaying ? '재생 중지' : '번역 결과 듣기'}>
+        {isOutputPlaying ? '⏸️ 중지' : '🔊 듣기'}
+      </button>
+    )}
+  </div>
+  {isQuizMode ? (
+    <textarea
+      className="input-textarea"
+      placeholder="정답을 여기에 입력하세요..."
+      value={userAnswer}
+      onChange={(e) => setUserAnswer(e.target.value)}
+      disabled={isLoading}
+    />
+  ) : (
+    <div className="output-textarea">{translatedText || '번역 결과가 여기에 표시됩니다...'}</div>
+  )}
+</div>
+</div> {/* ▼▼▼ 이 닫는 태그(</div>) 한 줄을 추가하세요! ▼▼▼ */}
+
+      {/* 하단 메시지 및 버튼 영역 시작 */}
+      {error && !isQuizMode && (
+  <div className="error-message">⚠️ {error}</div>
+)}
+
+{isQuizMode && quizResult && (
+  <div className={`quiz-result ${quizResult.correct ? 'correct' : 'incorrect'}`}>
+    {quizResult.correct ? <p>🎉 정답입니다!</p> : <p>❌ 틀렸습니다. (정답: {quizResult.answer})</p>}
+  </div>
+)}
+
+<div className="action-buttons">
+  <button className="clear-button" onClick={isQuizMode ? () => {setUserAnswer(''); setQuizResult(null);} : handleClear} disabled={isQuizMode ? !userAnswer : (!inputText && !translatedText)}>
+    🔄 {isQuizMode ? '답안 지우기' : '초기화'}
+  </button>
+</div>
     </div>
   );
 };

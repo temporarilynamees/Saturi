@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const controller = require('./quiz.controller');
+const controller = require('../controllers/quiz.controller');
 
 // GET /api/quiz/new : 새로운 문제를 요청하는 경로
 router.get('/new', controller.getQuestion);

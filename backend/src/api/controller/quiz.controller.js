@@ -1,5 +1,4 @@
-const service = require('./quiz.service');
-
+const quizService = require('../service/quiz.service');
 // 새 문제 요청 처리
 async function getQuestion(req, res, next) {
     try {

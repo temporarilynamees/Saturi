@@ -9,7 +9,7 @@ const stt = require('./api/routes/stt.routes');
 const morgan = require('morgan');
 const ttsRoutes = require('./api/routes/tts.routes');
 const customTtsRoutes = require('./api/routes/customTts.routes');  // 👈 [추가] 새로운 라우트 등록
-const quiz = require('./api/quiz/quiz.router'); // 10.17일 퀴즈 라우트 추가 
+const quiz = require('./api/routes/quiz.router'); // 10.17일 퀴즈 라우트 추가 
 
 app.use(morgan('dev'));
 app.use(express.json({ limit: '2mb' }));

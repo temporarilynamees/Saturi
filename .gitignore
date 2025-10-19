@@ -2,7 +2,15 @@
 node_modules/
 uploads/
 cache/
-Ai-server/bidirectional_models_gpu
+Ai-server/bidirectional_models_gpu/
+Ai-server/monotonic_align/
+Ai-server/__pycache__/
+Ai-server/text/__pycache__/
+Ai-server/vits_models/
+Ai-server/text/
+venv/
+*.pyc
+__pycache__/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

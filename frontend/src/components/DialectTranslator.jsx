@@ -305,8 +305,12 @@ const DialectTranslator = () => {
   };
 // 사투리 헤더 수정, 왼쪽 입력창 수정 (input-section), 가운데 버튼 수정(arrow-section), 오른쪽 결과창 수정 (output-section)
   return (
-    <div className="translator-container">
-<div className="translator-header"> 
+    <>
+      <header className="site-header">
+        <div className="logo">MalMoe</div>
+      </header>
+      <div className="translator-container">
+<div className="translator-header">
   <h1>🗣️ 사투리 번역기</h1>
   <p>{isQuizMode ? '사투리 퀴즈를 풀어보세요!' : (direction === 'jeju_to_std' ? '사투리를 표준어로 번역해보세요' : '표준어를 사투리로 번역해보세요')}</p>
   <button className="mode-toggle-button" onClick={isQuizMode ? handleReturnToTranslate : handleGetQuiz}>
@@ -396,114 +400,6 @@ const DialectTranslator = () => {
     🔄 {isQuizMode ? '답안 지우기' : '초기화'}
   </button>
 </div>
-    </div>
-    <>
-      <header className="site-header">
-        <div className="logo">MalMoe</div>
-      </header>
-      <div className="translator-container">
-        <div className="translator-header">
-          <h1>🗣️ 제주어 번역기</h1>
-          <p>{direction === 'jeju_to_std' ? '제주어를 표준어로 번역해보세요' : '표준어를 제주어로 번역해보세요'}</p>
-        </div>
-
-      <div className="translator-body">
-        <div className="input-section">
-          <div className="section-header">
-            <h2>{direction === 'jeju_to_std' ? '사투리 입력' : '표준어 입력'}</h2>
-            <div>
-              {inputText && (
-                <button
-                  className={`play-button ${isInputPlaying ? 'playing' : ''}`}
-                  onClick={handlePlayInput}
-                  disabled={!inputText.trim()}
-                  title={isInputPlaying ? '재생 중지' : '입력 내용 듣기'}
-                >
-                  {isInputPlaying ? '⏸️ 중지' : '🔊 듣기'}
-                </button>
-              )}
-              <button
-                className={`voice-button ${isRecording ? 'listening' : ''}`}
-                onClick={handleVoiceInput}
-                disabled={isLoading}
-                title={isRecording ? '녹음 중지' : '음성 입력'}
-              >
-                {isRecording ? '🎤 녹음 중...' : '🎤 음성 입력'}
-              </button>
-            </div>
-          </div>
-          <textarea
-            className="input-textarea"
-            placeholder={direction === 'jeju_to_std' ? '번역할 제주어를 입력하세요...' : '번역할 표준어를 입력하세요...'}
-            value={inputText}
-            onChange={handleChange}
-            onCompositionStart={handleCompositionStart}
-            onCompositionEnd={handleCompositionEnd}
-            onKeyDown={handleKeyDown}
-            disabled={isLoading}
-          />
-          <div className="char-count">
-            {inputText.length} / 500
-          </div>
-        </div>
-
-        <div className="arrow-section">
-          <button
-            className="translate-button"
-            onClick={handleTranslate}
-            disabled={isLoading || !inputText.trim()}
-          >
-            {isLoading ? (
-              <span className="loading-spinner">⏳</span>
-            ) : (
-              <span>→</span>
-            )}
-          </button>
-          <button
-            className="swap-button"
-            onClick={handleSwapDirection}
-            disabled={isLoading}
-            title="번역 방향 전환"
-          >
-            🔄
-          </button>
-        </div>
-
-        <div className="output-section">
-          <div className="section-header">
-            <h2>{direction === 'jeju_to_std' ? '표준어 번역' : '제주어 번역'}</h2>
-            {translatedText && (
-              <button
-                className={`play-button ${isOutputPlaying ? 'playing' : ''}`}
-                onClick={handlePlayOutput}
-                disabled={!translatedText.trim()}
-                title={isOutputPlaying ? '재생 중지' : '번역 결과 듣기'}
-              >
-                {isOutputPlaying ? '⏸️ 중지' : '🔊 듣기'}
-              </button>
-            )}
-          </div>
-          <div className="output-textarea">
-            {translatedText || '번역 결과가 여기에 표시됩니다...'}
-          </div>
-        </div>
-      </div>
-
-      {error && (
-        <div className="error-message">
-          ⚠️ {error}
-        </div>
-      )}
-
-      <div className="action-buttons">
-        <button
-          className="clear-button"
-          onClick={handleClear}
-          disabled={!inputText && !translatedText}
-        >
-          🔄 초기화
-        </button>
-      </div>
       </div>
     </>
   );

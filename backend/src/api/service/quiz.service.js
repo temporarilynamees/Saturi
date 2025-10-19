@@ -1,5 +1,5 @@
 const admin = require('firebase-admin');
-const serviceAccount = require('');
+const serviceAccount = require('../../config/serviceAccountKey.json');
 // Firebase 앱 초기화 (최초 한 번만 실행)
 if (!admin.apps.length) {
   admin.initializeApp({

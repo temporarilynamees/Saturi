@@ -26,9 +26,13 @@ const options = {
         name: 'STT',
         description: '음성-텍스트 변환 API',
       },
+      {
+        name: 'TTS',
+        description: '텍스트-음성 변환 API',
+      },
     ],
   },
-  apis: ['./src/api/**/*.router.js'],
+  apis: ['./src/api/**/*.routes.js'],
 };
 
 const specs = swaggerJsdoc(options);

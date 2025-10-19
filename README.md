@@ -7,15 +7,15 @@ Dev 브랜치에 기능 통합을 진행하고 그 다음 main에 머지를 진�
 
 ## ✨ 주요 기능
 
-- 🎤 **음성 입력**: Web Speech API를 이용한 실시간 음성 인식
+- 🎤 **음성 입력**: ETRI STT API를 이용한 실시간 음성 인식
 - 💬 **텍스트 입력**: 직접 사투리 문장 입력
-- 🔄 **실시간 번역**: 사투리를 표준어로 자동 변환
-- 📱 **반응형 디자인**: 모바일/태블릿/데스크톱 지원
-
+- 🔄 **제주어 to 표준어 번역**: 사투리를 표준어로 자동 변환
+- 🔄 **표준어 to 제주어 번역**: 표준어를 사투리로 자동 변환
 ## 프로젝트 구조
 
 ```
 Saturi/
+├── Ai-Server/        # flask Ai-Server
 ├── backend/          # Express.js 백엔드 서버
 ├── frontend/         # React 프론트엔드
 ├── Ai-server/        # AI모델, TTS모델 및 서버
@@ -58,7 +58,6 @@ python model_server.py
 
 ```
 
-
 백엔드 서버: `http://localhost:8000`
 
 - https://drive.google.com/file/d/1RlCuxPEE6bpfJu8XEWKSSY-bs-VvzOhw/view?usp=sharing
@@ -91,10 +90,19 @@ npm run build
 npm run preview
 ```
 
-빌드된 파일은 `frontend/dist/` 폴더에 생성됩니다.
+### 4. swagger API 목록 확인
+
+```bash
+1.의 백엔드 실행과 동일함.
+```
+url : `http://localhost:3000/api-docs`
+
+### 5. .env 경로
+```bash
+backend 폴더 바로 아래에 
+```
 
 ## 전체 실행 가이드
-
 ### 개발 환경 (Development)
 
 **터미널 1 - 백엔드:**
@@ -150,12 +158,11 @@ GET /api/translation?sentence=사투리문장
 - Express.js
 - CORS
 - dotenv
-
 ### Frontend
 - React 18
 - Vite
 - Axios
-- Web Speech API (음성 인식)
+- ETRI API (음성 인식)
 - CSS3 (Animations & Responsive)
 
 ## 🎤 음성 입력 사용 방법
@@ -180,7 +187,7 @@ GET /api/translation?sentence=사투리문장
 
 - 백엔드: `3000`
 - 프론트엔드 (개발): `5000`
-
+- Ai-Server: `8000`
 ## 🐛 트러블슈팅
 
 ### 포트 충돌

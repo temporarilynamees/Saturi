@@ -251,8 +251,8 @@ const DialectTranslator = () => {
   return (
     <div className="translator-container">
       <div className="translator-header">
-        <h1>🗣️ 사투리 번역기</h1>
-        <p>{direction === 'jeju_to_std' ? '사투리를 표준어로 번역해보세요' : '표준어를 사투리로 번역해보세요'}</p>
+        <h1>🗣️ 제주어 번역기</h1>
+        <p>{direction === 'jeju_to_std' ? '제주어를 표준어로 번역해보세요' : '표준어를 제주어로 번역해보세요'}</p>
       </div>
 
       <div className="translator-body">
@@ -282,7 +282,7 @@ const DialectTranslator = () => {
           </div>
           <textarea
             className="input-textarea"
-            placeholder={direction === 'jeju_to_std' ? '번역할 사투리를 입력하세요...' : '번역할 표준어를 입력하세요...'}
+            placeholder={direction === 'jeju_to_std' ? '번역할 제주어를 입력하세요...' : '번역할 표준어를 입력하세요...'}
             value={inputText}
             onChange={handleChange}
             onCompositionStart={handleCompositionStart}
@@ -319,7 +319,7 @@ const DialectTranslator = () => {
 
         <div className="output-section">
           <div className="section-header">
-            <h2>{direction === 'jeju_to_std' ? '표준어 번역' : '사투리 번역'}</h2>
+            <h2>{direction === 'jeju_to_std' ? '표준어 번역' : '제주어 번역'}</h2>
             {translatedText && (
               <button
                 className={`play-button ${isOutputPlaying ? 'playing' : ''}`}

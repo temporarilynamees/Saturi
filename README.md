@@ -157,6 +157,7 @@ GET /api/translation?sentence=사투리문장
 - Express.js
 - CORS
 - dotenv
+- FFmpeg
 ### Frontend
 - React 18
 - Vite

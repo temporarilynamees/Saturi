@@ -17,8 +17,7 @@ Dev 브랜치에 기능 통합을 진행하고 그 다음 main에 머지를 진�
 Saturi/
 ├── Ai-Server/        # flask Ai-Server
 ├── backend/          # Express.js 백엔드 서버
-├── frontend/         # React 프론트엔드
-├── Ai-server/        # AI모델, TTS모델 및 서버
+├── frontend/         # React 프론트엔드    
 └── README.md
 
 ```

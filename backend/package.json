@@ -1,0 +1,39 @@
+{
+  "name": "saturi",
+  "version": "1.0.0",
+  "description": "saturi",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node src/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/temporarilynamees/Saturi.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/temporarilynamees/Saturi/issues"
+  },
+  "homepage": "https://github.com/temporarilynamees/Saturi#readme",
+  "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "axios": "^1.12.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
+    "firebase-admin": "^13.5.0",
+    "fluent-ffmpeg": "^2.1.3",
+    "gtts": "^0.2.1",
+    "joi": "^18.0.1",
+    "morgan": "^1.10.1",
+    "multer": "^2.0.2",
+    "node-cache": "^5.1.2",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
+  }
+}

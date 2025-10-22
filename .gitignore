@@ -1,6 +1,5 @@
 # Dependencies
 node_modules/
-uploads/
 cache/
 Ai-server/bidirectional_models_gpu/
 Ai-server/monotonic_align/

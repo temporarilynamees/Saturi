@@ -21,6 +21,7 @@ cv.waitKey()
 
 cv.destroyAllWindows()#....................
 
+#..
 
 
 

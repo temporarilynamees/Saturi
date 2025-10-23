@@ -18,9 +18,4 @@ cv.destroyAllWindows()
 
 
 
-
-
-
-
-
-
+#..

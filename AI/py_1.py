@@ -34,6 +34,6 @@ cv.namedWindow(WINDOW_NAME, cv.WINDOW_NORMAL)
 cv.resizeWindow(WINDOW_NAME, 1280, 720)
 
 cv.imshow(WINDOW_NAME, final_image)
-
+#..
 cv.waitKey()
 cv.destroyAllWindows()#....................

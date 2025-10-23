@@ -28,6 +28,7 @@ start = time.time()
 cv.cvtColor(bgr_img, cv.COLOR_BGR2GRAY)
 
 print('cv.cvtColor time:', time.time() - start)
+#..
 
 
 

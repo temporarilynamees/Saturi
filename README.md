@@ -136,7 +136,7 @@ cd backend
 npm install
 npm start
 ```
-## API 엔드포인트
+## API 엔드포인트(예시)
 
 ### 번역 API
 ```
